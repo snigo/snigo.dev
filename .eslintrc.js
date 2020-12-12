@@ -2,6 +2,7 @@ module.exports = {
   env: {
     browser: true,
     es6: true,
+    'jest/globals': true,
     node: true,
   },
   extends: [
@@ -12,6 +13,7 @@ module.exports = {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
   },
+  ignorePatterns: ['*.d.ts', '**/pkg'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaFeatures: {
@@ -26,5 +28,23 @@ module.exports = {
     '@typescript-eslint',
   ],
   rules: {
+    'import/extensions': [
+      'error',
+      'ignorePackages',
+      {
+        js: 'never',
+        jsx: 'never',
+        ts: 'never',
+        tsx: 'never',
+      },
+    ],
+    'no-underscore-dangle': 0,
+  },
+  settings: {
+    'import/resolver': {
+      node: {
+        extensions: ['.js', '.ts', '.tsx'],
+      },
+    },
   },
 };
