@@ -152,7 +152,7 @@ Converts string or number to a certain precision. Understands percentage and **d
 
 | **Parameter** | **Type**  | **Default value** | **Notes**                                        |
 |---------------|-----------|-------------------|--------------------------------------------------|
-| `number`      |`number`   |                   |                                                  |
+| `numberLike`      |`any`   |                   |                                                  |
 | `precision`   |`number`   | 12                | Optional                                         |
 
 ```js
