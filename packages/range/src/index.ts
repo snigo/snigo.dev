@@ -1,12 +1,17 @@
 import { mod, round } from '@snigo.dev/mathx';
-import { checkLength, maxPrecision, normalizeStep } from './utils';
+import {
+  checkLength,
+  maxPrecision,
+  normalizeStep,
+  RangeCallback,
+} from './utils';
 
 class Range {
-  readonly from: number;
+  readonly from: number | undefined = undefined;
 
-  readonly to: number;
+  readonly to: number | undefined = undefined;
 
-  readonly step: number;
+  readonly step: number | undefined = undefined;
 
   /**
    * If only one argument provided the output will be
@@ -16,20 +21,29 @@ class Range {
    * @param {number} rangeEnd Number the range will end on, including this number
    * @param {number} step Step size, default to 1
    */
-  constructor(rangeStart?, rangeEnd?, step = 1) {
-    const from = arguments.length > 1 ? +rangeStart : 0;
-    const to = arguments.length > 1 ? +rangeEnd : +rangeStart;
-    if (Number.isNaN(from) || Number.isNaN(to) || !arguments.length) return undefined;
+  constructor(rangeStart?: number, rangeEnd?: number, step: number = 1) {
+    const from = arguments.length > 1 ? +(rangeStart || 0) : 0;
+    const to = arguments.length > 1 ? +(rangeEnd || 0) : +(rangeStart || 0);
+    if (Number.isNaN(from) || Number.isNaN(to) || !arguments.length) return this;
     const normalizedStep = normalizeStep(step);
     Object.defineProperties(this, {
       from: {
         value: from,
+        enumerable: true,
+        configurable: false,
+        writable: false,
       },
       to: {
         value: to,
+        enumerable: true,
+        configurable: false,
+        writable: false,
       },
       step: {
         value: normalizedStep,
+        enumerable: true,
+        configurable: false,
+        writable: false,
       },
     });
   }
@@ -44,7 +58,8 @@ class Range {
    * It will try to account for presicion errors
    */
   * [Symbol.iterator]() {
-    checkLength.call(this);
+    checkLength(this);
+    if (this.from === undefined || this.to === undefined || this.step === undefined) return [];
 
     const isAsc = this.from <= this.to;
     const _p = maxPrecision([this.step, this.from, this.to]);
@@ -56,6 +71,7 @@ class Range {
     ) {
       yield i;
     }
+    return undefined;
   }
 
   /**
@@ -72,9 +88,14 @@ class Range {
   static from(iterableNumbers: number[] | Set<number>) {
     if (iterableNumbers == null) return new Range();
     if (typeof iterableNumbers[Symbol.iterator] !== 'function') return new Range();
+    if (iterableNumbers instanceof Set && !iterableNumbers.size) return new Range();
+    if (iterableNumbers instanceof Array && !iterableNumbers.length) return new Range();
+    if (iterableNumbers instanceof String && !iterableNumbers.length) return new Range();
 
     const min = Math.min(...iterableNumbers);
     const max = Math.max(...iterableNumbers);
+
+    if (Number.isNaN(min) || Number.isNaN(max)) return new Range();
 
     return new Range(min, max);
   }
@@ -91,8 +112,13 @@ class Range {
    * @param {function} fn Function to be executed on every number in the range
    * @param {number} step Optional step, if different from initial range step
    */
-  forEach(fn, step = this.step) {
-    checkLength.call(this);
+  forEach(fn: RangeCallback, step = this.step) {
+    if (
+      this.from === undefined
+      || this.to === undefined
+      || this.step === undefined
+    ) return undefined;
+    checkLength(this);
     const normalizedStep = normalizeStep(step);
     const isAsc = this.from <= this.to;
     const _p = maxPrecision([normalizedStep, this.from, this.to]);
@@ -100,7 +126,7 @@ class Range {
     for (
       let i = this.from;
       isAsc ? i <= this.to : i >= this.to;
-      i = round((isAsc ? i + step : i - step), _p)
+      i = round((isAsc ? i + normalizedStep : i - normalizedStep), _p)
     ) {
       fn(i, count, this);
       count += 1;
@@ -116,8 +142,13 @@ class Range {
    * @param {function} fn Function to be executed on every number in the range
    * @param {number} step Optional step, if different from initial range step
    */
-  forEachReverse(fn, step = this.step) {
-    checkLength.call(this);
+  forEachReverse(fn: RangeCallback, step = this.step) {
+    if (
+      this.from === undefined
+      || this.to === undefined
+      || this.step === undefined
+    ) return undefined;
+    checkLength(this);
     const normalizedStep = normalizeStep(step);
 
     const isAsc = this.from <= this.to;
@@ -126,7 +157,7 @@ class Range {
     for (
       let i = this.to;
       isAsc ? i >= this.from : i <= this.from;
-      i = round((isAsc ? i - step : i + step), _p)
+      i = round((isAsc ? i - normalizedStep : i + normalizedStep), _p)
     ) {
       fn(i, count, this);
       count += 1;
@@ -140,7 +171,7 @@ class Range {
    * The length of the resulting array when toArray() method invoked
    */
   get length(): number {
-    if (this.to === undefined || this.from === undefined) return 0;
+    if (this.to === undefined || this.from === undefined || this.step === undefined) return 0;
     return Math.round(Math.abs(this.to - this.from) / this.step) + 1;
   }
 
@@ -148,6 +179,7 @@ class Range {
    * Returns largest number in the range.
    */
   get max(): number {
+    if (this.from === undefined || this.to === undefined) return NaN;
     return this.from <= this.to ? this.to : this.from;
   }
 
@@ -155,6 +187,7 @@ class Range {
    * Returns lowest number in the range.
    */
   get min(): number {
+    if (this.from === undefined || this.to === undefined) return NaN;
     return this.from <= this.to ? this.from : this.to;
   }
 
@@ -164,7 +197,7 @@ class Range {
    * range.center; // 0
    */
   get center(): number {
-    if (this.to === undefined || this.from === undefined) return undefined;
+    if (this.to === undefined || this.from === undefined) return NaN;
     return this.min + (this.max - this.min) / 2;
   }
 
@@ -242,11 +275,11 @@ class Range {
    * @param {number} parts Number of parts range ro be sliced to
    */
   slice(parts: number): number[] {
-    if (!parts) return [];
+    if (!parts || this.step === undefined) return [];
 
     const step = round((this.max - this.min + this.step) / parts);
     const output: number[] = [];
-    this.forEach((number) => output.push(number), step);
+    this.forEach((number: number) => output.push(number), step);
 
     return output;
   }
@@ -260,7 +293,7 @@ class Range {
    *
    * @param {number} number Number to be checked
    */
-  mod(number) {
+  mod(number: number): number {
     return this.min + mod(+number, this.max - this.min + 1);
   }
 }

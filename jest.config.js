@@ -4,6 +4,10 @@ module.exports = {
       diagnostics: false,
     },
   },
+  modulePathIgnorePatterns: ['pkg/'],
+  moduleNameMapper: {
+    '^@snigo.dev/(.*)$': '<rootDir>/packages/$1/src',
+  },
   roots: [
     '<rootDir>/packages',
   ],

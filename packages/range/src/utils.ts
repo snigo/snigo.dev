@@ -1,11 +1,13 @@
+/* eslint-disable no-unused-vars */
 import { precision } from '@snigo.dev/mathx';
+import Range from './index';
 
 /**
  * Determines if Range is iterable and throws error if not
  */
-export function checkLength() {
+export function checkLength(range: Range) {
   const MAX_ARRAY_SIZE = 4294967295;
-  if (this.length > MAX_ARRAY_SIZE) {
+  if (range.length > MAX_ARRAY_SIZE) {
     throw RangeError('Cannot iterate infinite size range');
   }
 }
@@ -30,3 +32,5 @@ export function maxPrecision(numbers: number[]): number {
   if (!Array.isArray(numbers)) return NaN;
   return Math.max(...numbers.map(precision));
 }
+
+export type RangeCallback = (n: number, i: number, r: Range) => void;

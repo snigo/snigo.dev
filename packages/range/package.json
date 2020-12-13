@@ -21,12 +21,39 @@
     "url": "git+https://github.com/snigo/snigo.dev.git"
   },
   "scripts": {
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "build": "pika build && copyfiles -f README.md ../../LICENSE pkg",
+    "publish": "npm publish pkg"
   },
   "bugs": {
     "url": "https://github.com/snigo/snigo.dev/issues"
   },
   "dependencies": {
     "@snigo.dev/mathx": "^0.0.1"
+  },
+  "@pika/pack": {
+    "pipeline": [
+      [
+        "@pika/plugin-ts-standard-pkg"
+      ],
+      [
+        "@pika/plugin-build-node"
+      ],
+      [
+        "@pika/plugin-build-web",
+        {
+          "entrypoint": [
+            "module",
+            "unpkg",
+            "jsdelivr"
+          ]
+        }
+      ],
+      [
+        "@pika/plugin-build-umd"
+      ],
+      [
+        "@pika/plugin-bundle-types"
+      ]
+    ]
   }
 }
