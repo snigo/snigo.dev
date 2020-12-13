@@ -1,6 +1,6 @@
 {
   "name": "@snigo.dev/range",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Range class somewhat influenced by the function of the same name from Python",
   "author": "snigo <snigo.ogins@gmail.com>",
   "homepage": "https://github.com/snigo/snigo.dev#readme",
@@ -27,6 +27,6 @@
     "url": "https://github.com/snigo/snigo.dev/issues"
   },
   "dependencies": {
-    "@snigo.dev/mathx": "^0.0.0"
+    "@snigo.dev/mathx": "^0.0.1"
   }
 }
