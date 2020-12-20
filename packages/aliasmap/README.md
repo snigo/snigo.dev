@@ -533,3 +533,21 @@ swatch.forEach((entry) => {
 // "Color pink."
 
 ```
+
+*NOTE: `for-of` loop can be aplied to alias map instance too:
+
+```js
+
+const swatch = new AliasMap();
+
+swatch.set('gray', '#808080', 'grey');
+swatch.set('pink', '#FFC0CB');
+
+for (const entry of swatch) {
+  console.log(`Color ${entry.key}.`);
+}
+// Logs:
+// "Color gray."
+// "Color pink."
+
+```
