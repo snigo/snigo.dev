@@ -1,0 +1,53 @@
+{
+  "name": "@snigo.dev/aliasmap",
+  "version": "0.0.1",
+  "description": "Bidirectional map with support for aliases",
+  "author": "snigo <snigo.ogins@gmail.com>",
+  "homepage": "https://github.com/snigo/snigo.dev#readme",
+  "license": "Apache-2.0",
+  "main": "src",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/snigo/snigo.dev.git"
+  },
+  "scripts": {
+    "build": "pika build && copyfiles -f README.md ../../LICENSE pkg",
+    "publish": "npm publish pkg"
+  },
+  "bugs": {
+    "url": "https://github.com/snigo/snigo.dev/issues"
+  },
+  "@pika/pack": {
+    "pipeline": [
+      [
+        "@pika/plugin-ts-standard-pkg"
+      ],
+      [
+        "@pika/plugin-build-node"
+      ],
+      [
+        "@pika/plugin-build-web",
+        {
+          "entrypoint": [
+            "module",
+            "unpkg",
+            "jsdelivr"
+          ]
+        }
+      ],
+      [
+        "@pika/plugin-build-umd"
+      ],
+      [
+        "@pika/plugin-bundle-types"
+      ]
+    ]
+  }
+}
