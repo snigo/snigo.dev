@@ -551,3 +551,24 @@ for (const entry of swatch) {
 // "Color pink."
 
 ```
+
+## Usage with TypeScript
+
+You can provide generic types for keys, values and optionally for aliases:
+
+```ts
+
+const commands = new AliasMap<string, Function, string>('install', installFn, 'i');
+
+```
+
+If no type provided for aliases, it will be defaulted to type of the keys:
+
+```ts
+
+const commands = new AliasMap<string, Function>('install', installFn, 'i');
+commands.setAlias('i', true); // => TS Error
+
+```
+
+The entries of alias map will inherit types for keys and values.
