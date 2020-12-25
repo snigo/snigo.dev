@@ -94,3 +94,97 @@ return <div>{value}</div>;
 ```
 
 On the surface this might seem like still a lot of coupling inside `useCalculator()` function, but for larger interfaces this hook will always stay the same and will act as a "driver" for the interface and at the moment when frontend library will change it's API or you will decide to switch to another library, the only thing you will need to rewrite is this "driver" function without worrying about anything else.
+
+## API
+
+### `withChannel(wrappedClass)`
+
+Class decorator, extends given wrapped class and returns new decorated class whose instances would be proxy channels.
+
+| **Parameter** | **Type**  | **Default value** | **Notes**                      |
+|---------------|-----------|-------------------|--------------------------------|
+| `wrappedClass`| `Function`|                   | Class to be decorated          |
+
+```js
+
+import { withChannel } from 'snigo.dev/channel';
+
+class Person {
+  constructor(name, age) {
+    this.name = name;
+    this.age = age;
+  }
+}
+
+const Person$ = withChannel(Person);
+const person = new Person$('Alice', 23);
+
+person.subscribe({
+  'age': (value, target) => {
+    console.log(`Happy ${value} Birthday, ${target.name}!`);
+  }
+});
+
+person.age = 24;
+// => Logs "Happy 24 Birthday, Alice!"
+
+```
+
+#### Usage with typescript
+
+You can use `withChannel` as class decorators in typescript. More info here: https://www.typescriptlang.org/docs/handbook/decorators.html
+
+```ts
+
+import { withChannel } from 'snigo.dev/channel';
+
+@withChannel
+class Person {
+  public name: string;
+
+  public age: number;
+
+  constructor(name: string, age: number) {
+    this.name = name;
+    this.age = age;
+  }
+}
+
+const person = new Person('Alice', 23);
+
+person.subscribe({
+  'age': (value, target) => {
+    console.log(`Happy ${value} Birthday, ${target.name}!`);
+  }
+});
+
+person.age = 24;
+// => Logs "Happy 24 Birthday, Alice!"
+
+```
+
+### `channel(object)`
+
+Proxyfies given object returning proxy channel instance of the object.
+
+| **Parameter** | **Type**  | **Default value** | **Notes**                      |
+|---------------|-----------|-------------------|--------------------------------|
+| `object`      | `Object`  |                   | Object to be proxyfied         |
+
+```js
+
+import { channel } from 'snigo.dev/channel';
+
+const obj = { name: 'Bob', age: 34 };
+const bobChannel = channel(obj);
+
+bobChannel.subscribe({
+  'age': (value, target) => {
+    console.log(`Happy ${value} Birthday, ${target.name}!`);
+  }
+});
+
+bobChannel.age = 35;
+// => Logs "Happy 35 Birthday, Bob!"
+
+```
