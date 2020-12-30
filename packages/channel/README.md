@@ -163,6 +163,8 @@ person.age = 24;
 
 ```
 
+***
+
 ### `channel(object)`
 
 Proxyfies given object returning proxy channel instance of the object.
@@ -188,3 +190,88 @@ bobChannel.age = 35;
 // => Logs "Happy 35 Birthday, Bob!"
 
 ```
+
+***
+
+### `Channel`
+
+Proxy channel class. 
+
+#### `Channel.prototype.subscribe(subscriptionDescriptor)`
+
+Subscribes to a particular property of proxy channel.
+
+| **Parameter**           | **Type**             | **Default value** | **Notes**                      |
+|-------------------------|----------------------|-------------------|--------------------------------|
+| `subscriptionDescriptor`| `SubscriptionTopic`  |                   | Subscription descriptor object |
+
+`subscriptionDescriptor` object is an object with keys represent properties to subscribe to and values callback function that will be called each time those properties will be changed. `SubscriptionCallback` will be called with two arguments:
+- `value`: new value of the property
+- `target`: the proxy channel instance
+
+*Note: the `target` in callback function will still have previous value of a property that has been changed:
+
+```js
+
+import { channel } from 'snigo.dev/channel';
+
+const stateChannel = channel({ count: 4 });
+
+const subscriptionCallback = (value, target) => {
+  console.log(`Value has been changed from ${target.count} to ${value}`);
+};
+
+const subscriptionDescriptor = {
+  count: subscriptionCallback,
+};
+
+const sub = stateChannel.subscribe(subscriptionDescriptor);
+
+stateChannel.count = 20;
+// => Logs "Value has been changed from 4 to 20"
+
+```
+
+Returns `SubscriptionReceipt` allowing to unsubscribe from properties:
+
+```js
+
+// If no argument provided will unsubscribe from all properties
+sub.unsubscribe();
+
+stateChannel.count = 22;
+// => Logs nothing
+
+```
+
+***
+
+#### `Channel.prototype.unsubscribe(id, [key])`
+
+Allows channel proxy to unsubscribe certain subscribers by id. Rarely will be needed.
+
+| **Parameter**  | **Type**     | **Default value** | **Notes**                                  |
+|----------------|--------------|-------------------|--------------------------------------------|
+| `id`           | `number`     |                   | Subscription id                            |
+| `key`          | `string`     |                   | Optional property name to unsubscribe from |
+
+If `key` isn't provided will unsubscribe subscription with given `id` from all properties.
+
+***
+
+#### `Channel.prototype.push(key, value)`
+
+Pushes new value for given key. It will have the same result if value is simply reassigned with the only difference that `.push()` will return proxy channel instance back allowing chaining.
+
+| **Parameter**  | **Type**     | **Default value** | **Notes**                              |
+|----------------|--------------|-------------------|----------------------------------------|
+| `key`          | `string`     |                   | Property to be updated                 |
+| `value`        | `any`        |                   | New value for given property           |
+
+```js
+
+import { channel } from 'snigo.dev/channel';
+
+const taskChannel = channel({ tasks: [] });
+const addTask = (channel, task) => channel.push('tasks', [...channel.tasks, task]);
+
