@@ -1,11 +1,35 @@
 # `@snigo.dev/cf`
 
-> TODO: description
+Collection of compare functions for everyday use, providing three different methods of sorting:
+- Alphanumeric: standard sorting by character code
+- Numeric: numbers sorted before any textual content
+- DateTime: sorting by parsable date (based on `Date.parse`)
 
 ## Usage
 
-```
-const cf = require('@snigo.dev/cf');
+```js
+import { cfDateTimeBy } from '@snigo.dev/cf';
 
-// TODO: DEMONSTRATE API
+const users = [
+  { name: 'Jeff', dob: 'January 12, 1964' },
+  { name: 'Elon', dob: 'June 28, 1971' },
+  { name: 'Bill', dob: 'October 28, 1955' },
+  { name: 'Mark', dob: 'May 14, 1984' },
+];
+
+users.sort(cfDateTimeBy('dob', 'desc'));
+/**
+ * => [
+ *   { name: 'Bill', dob: 'October 28, 1955' },
+ *   { name: 'Jeff', dob: 'January 12, 1964' },
+ *   { name: 'Elon', dob: 'June 28, 1971' },
+ *   { name: 'Mark', dob: 'May 14, 1984' },
+ * ]
+ * /
 ```
+
+## Motivation
+
+Provide higher comparing abstraction for sorting methods.
+
+## API

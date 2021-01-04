@@ -28,12 +28,13 @@ function __padNumber(n: number | bigint, p: number) {
  *
  * @returns {number} Rounded number
  */
-function round(num: number, precision: number): number;
-function round(num: bigint, precision: number): bigint;
+function round(num: number, precision?: number): number;
+function round(num: bigint, precision?: number): bigint;
 function round(num: any, precision: number = 12): any {
   if (typeof num === 'bigint') return precision < 0 ? __padNumber(num, precision) : num;
-  return +(Math.round(num * 10 ** precision) * 10 ** -precision)
-    .toFixed(precision < 0 ? 0 : precision);
+  const factor = 10 ** precision;
+  const product = Math.round(num * factor * 10) / 10;
+  return Math.round(product) / factor;
 }
 
 export default round;
