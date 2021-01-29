@@ -42,6 +42,7 @@ module.exports = {
     'no-restricted-syntax': 0,
     'no-confusing-arrow': 0,
     'func-names': 0,
+    'new-cap': 0,
   },
   settings: {
     'import/resolver': {

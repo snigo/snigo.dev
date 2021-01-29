@@ -16,15 +16,46 @@ import {
   cfNumericDesc,
 } from '../src';
 
-import {
-  users,
-  usersByNameAsc,
-  usersByNameDesc,
-  usersByFollowersAsc,
-  usersByFollowersDesc,
-  usersByDateOfBirthAsc,
-  usersByDateOfBirthDesc,
-} from './users.mock';
+const users = [
+  {
+    name: 'Deep Beate',
+    followers: 6062,
+    dateOfBirth: '1988-11-21',
+  },
+  {
+    name: 'Julinha Quinton',
+    followers: 4137,
+    dateOfBirth: '1992-11-18',
+  },
+  {
+    name: 'Antonia Łucjan',
+    followers: 1182,
+    dateOfBirth: '1983-08-09',
+  },
+  {
+    name: 'Giusy Zaïre',
+    followers: 112,
+    dateOfBirth: '2000-06-14',
+  },
+  {
+    name: 'Elviira Hvare Khshaeta',
+    followers: 2702,
+    dateOfBirth: '1999-07-12',
+  },
+  {
+    name: 'Theron Nthanda',
+    followers: 1482,
+    dateOfBirth: '1981-01-09',
+  },
+];
+const usersByNameAsc = [...users.sort((a, b) => a.name.localeCompare(b.name))];
+const usersByNameDesc = [...usersByNameAsc].reverse();
+const usersByFollowersAsc = [...users.sort((a, b) => a.followers - b.followers)];
+const usersByFollowersDesc = [...usersByFollowersAsc].reverse();
+const usersByDateOfBirthAsc = [
+  ...users.sort((a, b) => Date.parse(a.dateOfBirth) - Date.parse(b.dateOfBirth)),
+];
+const usersByDateOfBirthDesc = [...usersByDateOfBirthAsc].reverse();
 
 test('alphanumeric sorting', () => {
   expect(cfAlphanumeric('alpha', 'zeta', 'asc')).toBe(-1);
@@ -91,8 +122,8 @@ test('alphanumeric sorting', () => {
   expect(cfAlphanumericAsc()).toBe(0);
   expect(cfAlphanumericDesc()).toBe(0);
 
-  const unsorted = ['squidward', '#ff2312', 1234, 'js', 'P', 0xff, null, undefined, NaN, 94, 23, 'Sevilla', 'ßraun', 13, 2, 8, true, [3, 5, 3], 'sausage', 'Alice', false];
-  const ascSorted = ['#ff2312', 1234, 13, 2, 23, 255, [3, 5, 3], 8, 94, 'Alice', false, 'js', NaN, null, 'P', 'sausage', 'Sevilla', 'squidward', 'ßraun', true, undefined];
+  const unsorted = ['squidward', '#ff2312', 1234, 'js', 'P', 0xff, null, NaN, 94, 23, 'Sevilla', 'ßraun', 13, 2, 8, true, [3, 5, 3], 'sausage', 'Alice', false];
+  const ascSorted = ['#ff2312', 1234, 13, 2, 23, 255, [3, 5, 3], 8, 94, 'Alice', false, 'js', NaN, null, 'P', 'sausage', 'Sevilla', 'squidward', 'ßraun', true];
   const descSorted = [...ascSorted].reverse();
 
   expect([...unsorted.sort(cfAlphanumeric)]).toEqual(ascSorted);
@@ -174,7 +205,7 @@ test('datetime sorting', () => {
   expect(cfDateTimeAsc()).toBe(0);
   expect(cfDateTimeDesc()).toBe(0);
 
-  const unsorted = ['sponge bob', '#javascript', 1234, 'Jan 1, 2021', 'P', 0xff, null, undefined, NaN, 94, 23, '1987-05-24', 'ßraun', 13, 2, 8, true, [3, 5, 3], 'sausage', 'Alice', false];
+  const unsorted = ['sponge bob', '#javascript', 1234, 'Jan 1, 2021', 'P', 0xff, null, NaN, 94, 23, '1987-05-24', 'ßraun', 13, 2, 8, true, [3, 5, 3], 'sausage', 'Alice', false];
   const dateAscSorted = [
     255,            // Jan 1, 255
     1234,           // Jan 1, 1235
@@ -196,7 +227,6 @@ test('datetime sorting', () => {
     'sponge bob',
     'ßraun',
     true,
-    undefined,
   ];
   const dateDescSorted = [...dateAscSorted].reverse();
 
@@ -274,8 +304,8 @@ test('numeric sorting', () => {
   expect(cfNumericAsc()).toBe(0);
   expect(cfNumericDesc()).toBe(0);
 
-  const unsorted = [4, true, 7, 'b', 2, '8', -2, [1, 2, 3], 9, 'c', '6', 0, false, 2, 4, -7, {}, 6, -0, '7', NaN, '34', Infinity, 2, '5', 7, undefined, 3, '56', null, 'Infinity', 768, 'a'];
-  const numSortedAsc = [-7, -2, 0, false, -0, true, 2, 2, 2, 3, 4, 4, '5', '6', 6, 7, '7', 7, '8', 9, '34', '56', 768, Infinity, 'Infinity', {}, [1, 2, 3], 'a', 'b', 'c', NaN, null, undefined];
+  const unsorted = [4, 7, 'b', 2, '8', -2, [1, 2, 3], 9, 'c', '6', 0, 27, 14, -7, {}, 16, '7e-1', NaN, '34', Infinity, 2, '5', 3.7, 3, '56', '-Infinity', 768, 'a'];
+  const numSortedAsc = ['-Infinity', -7, -2, 0, '7e-1', 2, 2, 3, 3.7, 4, '5', '6', 7, '8', 9, 14, 16, 27, '34', '56', 768, Infinity, {}, [1, 2, 3], 'a', 'b', 'c', NaN];
   const numSortedDesc = [...numSortedAsc].reverse();
 
   expect([...unsorted.sort(cfNumeric)]).toEqual(numSortedAsc);

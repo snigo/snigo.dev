@@ -9,8 +9,7 @@
     "skipLibCheck": true,
     "strict": true,
     "esModuleInterop": true,
-    "moduleResolution": "node",
-    "downlevelIteration": true
+    "moduleResolution": "node"
   },
   "include": ["src"]
 }

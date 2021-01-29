@@ -1,11 +1,11 @@
-# `@snigo.dev/list`
+# `@snigo.dev/color`
 
 > TODO: description
 
 ## Usage
 
 ```
-const list = require('@snigo.dev/list');
+const color = require('@snigo.dev/color');
 
 // TODO: DEMONSTRATE API
 ```

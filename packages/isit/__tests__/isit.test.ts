@@ -1,15 +1,24 @@
-/* eslint-disable symbol-description */
 // @ts-nocheck
+/* eslint-disable no-new-wrappers */
+/* eslint-disable symbol-description */
 /* eslint-disable max-classes-per-file */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-new-func */
 /* eslint-disable func-names */
 import {
+  isAnyNumber,
   isArrow,
+  isBoolean,
   isConstructor,
+  isDate,
+  isDateLike,
   isFunction,
   isIterable,
   isNullish,
+  isNumberLike,
+  isNumber,
+  isPromise,
+  isString,
   isSymbol,
 } from '../src';
 
@@ -97,9 +106,112 @@ test('isNullish function', () => {
   expect(isNullish({})).toBe(false);
 });
 
+test('isPromise function', () => {
+  expect(isPromise(Promise)).toBe(false);
+  expect(isPromise(new Promise((r) => r(1)))).toBe(true);
+  expect(isPromise()).toBe(false);
+  expect(isPromise((async () => {})())).toBe(true);
+});
+
 test('isSymbol function', () => {
   expect(isSymbol(Symbol)).toBe(false);
   expect(isSymbol(Symbol())).toBe(true);
   expect(isSymbol()).toBe(false);
   expect(isSymbol(Symbol('not a symbol'))).toBe(true);
+});
+
+test('isBoolean function', () => {
+  expect(isBoolean('true')).toBe(false);
+  expect(isBoolean(true)).toBe(true);
+  expect(isBoolean(false)).toBe(true);
+  expect(isBoolean()).toBe(false);
+  expect(isBoolean(null)).toBe(false);
+  expect(isBoolean(0)).toBe(false);
+  expect(isBoolean('')).toBe(false);
+  expect(isBoolean(new Boolean(true))).toBe(false);
+  expect(isBoolean(new Boolean(true), 1)).toBe(true);
+});
+
+test('isDate function', () => {
+  const date = new Date();
+  const invalid = new Date('not a date');
+  const now = Date.now();
+  expect(isDate(date)).toBe(true);
+  expect(isDate(now)).toBe(false);
+  expect(isDate('2012-12-10')).toBe(false);
+  expect(isDate(date.toISOString())).toBe(false);
+  expect(isDate(0)).toBe(false);
+  expect(isDate(Date)).toBe(false);
+  expect(isDate(invalid)).toBe(true);
+  expect(isDate(invalid, false)).toBe(false);
+  expect(isDate(new Date(), 0)).toBe(true);
+  expect(isDate(new Date('2021-12-23'), 0)).toBe(true);
+  expect(isDate(new Date('2021-12-32'), 0)).toBe(false);
+});
+
+test('isDateLike function', () => {
+  const date = new Date();
+  const invalid = new Date('not a date');
+  const now = Date.now();
+  expect(isDateLike(date)).toBe(true);
+  expect(isDateLike(now)).toBe(false);
+  expect(isDateLike('2012-12-10')).toBe(true);
+  expect(isDateLike(date.toISOString())).toBe(true);
+  expect(isDateLike(0)).toBe(true);
+  expect(isDateLike(6)).toBe(true);
+  expect(isDateLike(13)).toBe(false);
+  expect(isDateLike(Date)).toBe(false);
+  expect(isDateLike('now')).toBe(false);
+  expect(isDateLike(invalid)).toBe(false);
+  expect(isDateLike(new Date())).toBe(true);
+  expect(isDateLike(new Date('2021-12-23'))).toBe(true);
+  expect(isDateLike(new Date('2021-12-32'))).toBe(false);
+  expect(isDateLike('2021-12-23')).toBe(true);
+  expect(isDateLike('2021-12-32')).toBe(false);
+  expect(isDateLike([2021, 12, 10])).toBe(true);
+});
+
+test('isNumber function', () => {
+  expect(isNumber('45')).toBe(false);
+  expect(isNumber(45)).toBe(true);
+  expect(isNumber(45n)).toBe(false);
+  expect(isNumber(0b10010101101)).toBe(true);
+  expect(isNumber(new Number(34))).toBe(false);
+  expect(isNumber(new Number(34), true)).toBe(true);
+});
+
+test('isAnyNumber function', () => {
+  expect(isAnyNumber('45')).toBe(false);
+  expect(isAnyNumber(45)).toBe(true);
+  expect(isAnyNumber(45n)).toBe(true);
+  expect(isAnyNumber(0b10010101101)).toBe(true);
+  expect(isAnyNumber(new Number(34))).toBe(true);
+});
+
+test('isNumberLike function', () => {
+  expect(isNumberLike('45')).toBe(true);
+  expect(isNumberLike(45)).toBe(true);
+  expect(isNumberLike(45n)).toBe(true);
+  expect(isNumberLike('45n')).toBe(false);
+  expect(isNumberLike(0b10010101101)).toBe(true);
+  expect(isNumberLike(new Number(34))).toBe(true);
+  expect(isNumberLike('34%')).toBe(false);
+  expect(isNumberLike('34e-5')).toBe(true);
+  expect(isNumberLike('Infinity')).toBe(true);
+  expect(isNumberLike(null)).toBe(false);
+  expect(isNumberLike(undefined)).toBe(false);
+  expect(isNumberLike(NaN)).toBe(true);
+  expect(isNumberLike(true)).toBe(false);
+  expect(isNumberLike(false)).toBe(false);
+  expect(isNumberLike(new Boolean(true))).toBe(false);
+});
+
+test('isString function', () => {
+  expect(isString('45')).toBe(true);
+  expect(isString(45)).toBe(false);
+  expect(isString(`this is a ${String('string')}`)).toBe(true);
+  expect(isString('')).toBe(true);
+  expect(isString()).toBe(false);
+  expect(isString(new String('string object'))).toBe(false);
+  expect(isString(new String('string object'), true)).toBe(true);
 });

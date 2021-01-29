@@ -17,13 +17,13 @@ const users = [
   { name: 'Mark', dob: 'May 14, 1984' },
 ];
 
-users.sort(cfDateTimeBy('dob', 'desc'));
+[...users].sort(cfDateTimeBy('dob', 'desc'));
 /**
  * => [
- *   { name: 'Bill', dob: 'October 28, 1955' },
- *   { name: 'Jeff', dob: 'January 12, 1964' },
- *   { name: 'Elon', dob: 'June 28, 1971' },
  *   { name: 'Mark', dob: 'May 14, 1984' },
+ *   { name: 'Elon', dob: 'June 28, 1971' },
+ *   { name: 'Jeff', dob: 'January 12, 1964' },
+ *   { name: 'Bill', dob: 'October 28, 1955' },
  * ]
  * /
 ```
@@ -33,3 +33,4 @@ users.sort(cfDateTimeBy('dob', 'desc'));
 Provide higher comparing abstraction for sorting methods.
 
 ## API
+
