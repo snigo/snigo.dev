@@ -20,6 +20,24 @@
   "bugs": {
     "url": "https://github.com/snigo/snigo.dev/issues"
   },
+  "keywords": [
+    "color",
+    "colour",
+    "parser",
+    "css4",
+    "css5",
+    "lab",
+    "cielab",
+    "xyz",
+    "ciexyz",
+    "srgb",
+    "display-p3",
+    "p3-color",
+    "mix",
+    "contrast",
+    "lerp",
+    "gradient"
+  ],
   "dependencies": {
     "@snigo.dev/mathx": "^0.0.1"
   },

@@ -41,7 +41,7 @@ export function mix(model: keyof typeof MODEL_PARAMS = 'rgb', descriptor?: any) 
   if (m.startsWith('p3:')) m = (m.substring(3) as keyof typeof MODEL_PARAMS);
 
   /** anyfying JS magic, trust the system */
-  return (ColorConstructor as any)[`${model}Array`](params.map((p: string) => {
+  return (ColorConstructor as any)[`${model}Array`]((params as any).map((p: string) => {
     if (p === 'hue') return (_start as any)[p] + factor * getHueDiff((_start as any)[p], (_end as any)[p], hueDirection);
     if (p === 'alpha') return (_start as any)[p] * (1 + factor);
     return (_start as any)[p] + factor * ((_end as any)[p] - (_start as any)[p]);

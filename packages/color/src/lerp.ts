@@ -51,12 +51,12 @@ export function lerp(model: keyof typeof MODEL_PARAMS = 'rgb', descriptor?: any)
   if (m.startsWith('p3:')) m = (m.substring(3) as keyof typeof MODEL_PARAMS);
 
   /** anyfying JS magic, trust the system */
-  const deltas = params.map((p: string) => p === 'hue'
+  const deltas = (params as any).map((p: string) => p === 'hue'
     ? getHueDiff(_start.hue, _end.hue, hueDirection) / (_stops + 1)
     : ((_end as any)[p] - (_start as any)[p]) / (_stops + 1));
 
   while (_stops > 0) {
-    output.push((ColorConstructor as any)[`${model}Array`](params.map((p: string, i: number) => (_start as any)[p] + deltas[i] * output.length)));
+    output.push((ColorConstructor as any)[`${model}Array`]((params as any).map((p: string, i: number) => (_start as any)[p] + deltas[i] * output.length)));
     _stops -= 1;
   }
 
