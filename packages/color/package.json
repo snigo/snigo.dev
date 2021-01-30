@@ -1,6 +1,6 @@
 {
   "name": "@snigo.dev/color",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Color functions",
   "author": "snigo <snigo.ogins@gmail.com>",
   "homepage": "https://github.com/snigo/snigo.dev#readme",
@@ -39,7 +39,7 @@
     "gradient"
   ],
   "dependencies": {
-    "@snigo.dev/mathx": "^0.0.2"
+    "@snigo.dev/mathx": "^0.0.3"
   },
   "@pika/pack": {
     "pipeline": [

@@ -1,6 +1,6 @@
 {
   "name": "@snigo.dev/channel",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Channel pub/sub proxy decorator",
   "author": "snigo <snigo.ogins@gmail.com>",
   "homepage": "https://github.com/snigo/snigo.dev#readme",
