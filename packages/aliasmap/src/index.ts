@@ -62,8 +62,8 @@ class AliasMap<K = any, V = any, A = K> {
     const state: AliasMapState<K, V, A> = {
       map: new Map<K | V | A, Entry<K, V>>(),
       size: 0,
-      strict: descriptor.strict ?? true,
-      immutable: descriptor.immutable ?? true,
+      strict: descriptor.strict != null ? descriptor.strict : true,
+      immutable: descriptor.immutable != null ? descriptor.immutable : true,
     };
 
     __scope.set(this, state);
