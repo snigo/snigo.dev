@@ -5,7 +5,7 @@
     "test": "jest"
   },
   "devDependencies": {
-    "@octokit/core": "^3.2.4",
+    "@octokit/core": "^6.0.0",
     "@pika/pack": "^0.5.0",
     "@pika/plugin-build-node": "^0.9.2",
     "@pika/plugin-build-types": "^0.9.2",
